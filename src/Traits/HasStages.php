@@ -47,7 +47,11 @@ Trait HasStages {
             $lastAlias = $alias;
 		}
 
-        return $query->whereNull($this->getTable().'.'.($this->parent_id ?? 'parent_id'));
+        $query = $query->whereNull($this->getTable().'.'.($this->parent_id ?? 'parent_id'));
+
+        $query->getQuery()->columns = [$lastAlias.'.*'];
+
+        return $query;
 	}
 
     public static function scopeGetStage(Builder $query, int $stage) {
@@ -60,7 +64,8 @@ Trait HasStages {
      * @return Builder
      */
 	public function scopeStages(Builder $query, int $from, int $to) {
-        $lastAlias = $this->getTable();
+        $qery = $this->scopeStage($query, $from ?? 0);
+        $lastAlias = $this->getTable().(($from ?? 0) === 0 ? '' : '-'.($from - 1));
 
 		for ($i = $from ?? 0; $i < $to; $i++) {
             $alias = $this->getTable().'-'.$i;
@@ -82,9 +87,16 @@ Trait HasStages {
 		}
 
         return $query->whereNull($this->getTable().'.'.($this->parent_id ?? 'parent_id'));
+        if (($from ?? 0) === 0)
+            $query = $query->whereNull($this->getTable().'.'.($this->parent_id ?? 'parent_id'));
+
+        $query = $query->distinct();
+        $query->getQuery()->columns = [$lastAlias.'.*'];
 	}
 
-    public function scopeGetStages(Builder $query, int $from, int $to) {
-        return $this->scopeStages($query, $from, $to)->get([$lastAlias.'.*']);
+    public function scopeGetStages(Builder $query, int $from, int $to, string $option = 'flat') {
+        $query = $this->scopeStages($query, $from, $to, $option);
+
+        return $query instanceof Builder ? $query->get() : $query;
     }
 }

@@ -132,3 +132,7 @@ Output:
     },
 ]
 ```
+
+## Changelog
+### v1.0.1
+- Correct bad stages
