@@ -1,0 +1,26 @@
+{
+    "name": "nastuzzi-samy/laravel-model-stages",
+    "description": "Add stage scopes to models with parents",
+    "version": "1.0.0",
+    "keywords": ["Query", "Laravel", "Model", "Stages", "Paginate", "Parent", "Order", "parent_id", "Children"],
+    "license": "MIT",
+    "require": {
+        "php": ">=7.1.3",
+        "illuminate/database": ">=5.0",
+        "symfony/http-kernel": ">=4.0.0"
+    },
+    "suggest": {
+        "nastuzzi-samy/laravel-query-selector": "Allow to a user to request a specific stage by selection"
+    },
+    "authors": [
+        {
+            "name": "Nastuzzi Samy",
+            "email": "samy@nastuzzi.fr"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "NastuzziSamy\\Laravel\\": "src/"
+        }
+    }
+}
