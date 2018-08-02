@@ -134,5 +134,8 @@ Output:
 ```
 
 ## Changelog
+### v1.1.0
+- Add flat and tree print option for stages
+
 ### v1.0.1
 - Correct bad stages

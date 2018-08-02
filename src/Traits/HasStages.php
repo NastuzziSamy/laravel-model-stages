@@ -3,6 +3,8 @@
 namespace NastuzziSamy\Laravel\Traits;
 
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Collection;
+use Illuminate\Database\Eloquent\Model;
 
 /**
  * This trait add multiple scopes into model class.
@@ -58,12 +60,33 @@ Trait HasStages {
         return $this->scopeStage($query, $stage)->get();
     }
 
+    private function addChildrenToTree(Collection $collection, Model $model, array $ids) {
+        // We make sure that the `children` property exists
+        $model->children = new Collection;
+
+        if (in_array($model->{$this->parent_id ?? 'parent_id'}, $ids)) {
+            foreach ($collection as $modelOfCollection) {
+                if ($modelOfCollection->id === $model->{$this->parent_id ?? 'parent_id'}) {
+                    $modelOfCollection->children->push($model);
+
+                    break;
+                }
+                else if ($modelOfCollection->children)
+                    $modelOfCollection->children = $this->addChildrenToTree($modelOfCollection->children, $model, $ids);
+            }
+        }
+        else
+            $collection->push($model);
+
+        return $collection;
+    }
+
     /**
      * Get all models between the `from` and `to` stages which are under `from` stages of root models
      * @param  Builder $query
      * @return Builder
      */
-	public function scopeStages(Builder $query, int $from, int $to) {
+	public function scopeStages(Builder $query, int $from, int $to, string $option = 'flat') {
         $qery = $this->scopeStage($query, $from ?? 0);
         $lastAlias = $this->getTable().(($from ?? 0) === 0 ? '' : '-'.($from - 1));
 
@@ -86,12 +109,32 @@ Trait HasStages {
             $lastAlias = $alias;
 		}
 
-        return $query->whereNull($this->getTable().'.'.($this->parent_id ?? 'parent_id'));
         if (($from ?? 0) === 0)
             $query = $query->whereNull($this->getTable().'.'.($this->parent_id ?? 'parent_id'));
 
         $query = $query->distinct();
         $query->getQuery()->columns = [$lastAlias.'.*'];
+
+        switch ($option) {
+            case 'tree':
+                $collection = new Collection;
+                $models = $query->get();
+                $passed_ids = [];
+
+                foreach ($models as $model) {
+                    $collection = $this->addChildrenToTree($collection, $model, $passed_ids);
+
+                    $passed_ids[] = $model->id;
+                }
+
+                return $collection;
+                break;
+
+            case 'flat':
+            default:
+                return $query;
+                break;
+        }
 	}
 
     public function scopeGetStages(Builder $query, int $from, int $to, string $option = 'flat') {
