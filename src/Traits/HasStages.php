@@ -86,9 +86,19 @@ Trait HasStages {
      * @param  Builder $query
      * @return Builder
      */
-	public function scopeStages(Builder $query, int $from, int $to, string $option = 'flat') {
-        $qery = $this->scopeStage($query, $from ?? 0);
+	public function scopeStages(Builder $query, int $from, int $to, ...$options) {
+        $query = $this->scopeStage($query, $from ?? 0);
         $lastAlias = $this->getTable().(($from ?? 0) === 0 ? '' : '-'.($from - 1));
+
+        if (count($options) === 0)
+            $option = 'flat';
+        else {
+            $option = $options[0];
+            unset($options[0]);
+
+            if (count($options) > 0)
+                $query = $query->whereIn($lastAlias.'.id', $options);
+        }
 
 		for ($i = $from ?? 0; $i < $to; $i++) {
             $alias = $this->getTable().'-'.$i;

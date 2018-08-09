@@ -1,3 +1,4 @@
+
 # laravel-model-stages
 
 A Laravel package that add some stage scopes on models
@@ -134,6 +135,10 @@ Output:
 ```
 
 ## Changelog
+### v1.2.0
+- Correct wrong variable
+- Add posibility to specify a base
+
 ### v1.1.0
 - Add flat and tree print option for stages
 
