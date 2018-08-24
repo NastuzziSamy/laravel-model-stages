@@ -83,7 +83,7 @@ Output:
 ]
 ```
 
-### Example 2: request /api/users?stage=0,1
+### Example 2: request /api/users?stages=0,1
 
 Output:
 ```json
