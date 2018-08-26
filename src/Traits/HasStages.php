@@ -20,12 +20,12 @@ Trait HasStages {
      * @param  Builder $query
      * @return Builder
      */
-    public static function scopeTopStage(Builder $query) {
+    public function scopeTopStage(Builder $query) {
         return $query->whereNull($this->parent_id ?? 'parent_id');
     }
 
-    public static function scopeGetTopStage(Builder $query) {
-        return $this->scopeTopStage($query)->get();
+    public function scopeGetTopStage(Builder $query) {
+        return self::scopeTopStage($query)->get();
     }
 
     /**
@@ -56,7 +56,7 @@ Trait HasStages {
         return $query;
 	}
 
-    public static function scopeGetStage(Builder $query, int $stage) {
+    public function scopeGetStage(Builder $query, int $stage) {
         return $this->scopeStage($query, $stage)->get();
     }
 

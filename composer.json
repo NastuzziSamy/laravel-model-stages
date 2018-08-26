@@ -1,7 +1,7 @@
 {
     "name": "nastuzzi-samy/laravel-model-stages",
     "description": "Add stage scopes to models with parents",
-    "version": "1.2.0",
+    "version": "1.2.1",
     "keywords": ["Query", "Laravel", "Model", "Stages", "Paginate", "Parent", "Order", "parent_id", "Children"],
     "license": "MIT",
     "require": {

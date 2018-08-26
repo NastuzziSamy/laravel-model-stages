@@ -135,6 +135,9 @@ Output:
 ```
 
 ## Changelog
+### v1.2.1
+- Some functions were static
+
 ### v1.2.0
 - Correct wrong variable
 - Add posibility to specify a base
