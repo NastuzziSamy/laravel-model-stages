@@ -10,7 +10,7 @@
         "symfony/http-kernel": ">=4.0.0"
     },
     "suggest": {
-        "nastuzzi-samy/laravel-query-selector": "Allow to a user to request a specific stage by selection"
+        "nastuzzi-samy/laravel-query-selection": "Allow to a user to request a specific stage by selection"
     },
     "authors": [
         {
